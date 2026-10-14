@@ -334,10 +334,13 @@ function renderCultureStep(){
   return `<div class="content-inner"><div class="section-title">文化适配扫描 <span class="pill ${riskCount?'pill-red':'pill-green'}">${state.realResult?`模型风险评分 ${Number.isFinite(Number(score))?score:"—"} / 100`:`发现 ${riskCount} 项待处理`}</span></div><div class="section-sub">${state.realResult?'以下为真实模型根据当前素材与目标市场返回的风险提示，仍需本地团队确认。':'检测结果是规则演示：具体含义可能取决于语境、受众及当地审查意见。'}</div>
     <div class="progress-wrap ${state.completed.has(2)?'show':''}" id="culture-progress"><div class="progress-bar" id="culture-progress-bar" style="${state.completed.has(2)?'width:100%':''}"></div></div>
     <div class="risk-layout" style="margin-top:14px"><div class="risk-preview"><div class="risk-preview-head"><strong style="font-size:11px">视觉元素扫描图</strong><span class="pill ${riskCount?'pill-red':'pill-green'}">${riskCount} 个风险提示</span></div><div class="risk-preview-body"><div class="mock-art" style="height:215px;border-radius:8px">
-  <div class="art-sun"></div>
-  <div class="art-title">FANTASY QUEST</div>
-  <div class="art-subtitle" style="font-size:21px">ENTER THE<br>UNKNOWN</div>
-  <div style="position:absolute;font-size:62px;left:56%;top:78px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5));z-index:1">🐷</div>
+  ${state.uploadObjectUrl
+    ? `<${state.fileType==='视频'?'video':'img'} class="uploaded-preview" src="${state.uploadObjectUrl}" ${state.fileType==='视频'?'muted autoplay loop playsinline':'alt="已上传素材预览"'}></${state.fileType==='视频'?'video':'img'}>`
+    : `<div class="art-sun"></div>
+       <div class="art-title">FANTASY QUEST</div>
+       <div class="art-subtitle" style="font-size:21px">ENTER THE<br>UNKNOWN</div>
+       <div style="position:absolute;font-size:62px;left:58%;top:80px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5));z-index:1">🐷</div>`
+  }
   ${riskOne?`<div class="art-flag flag-pig" style="left:56%;top:60px;width:60px;height:60px;cursor:pointer" data-risk="${escapeHTML(riskOne.id)}"><span>R-01</span></div>`:''}
   ${riskTwo?`<div class="art-flag flag-hand" style="right:17%;bottom:28px;width:36px;height:41px;cursor:pointer" data-risk="${escapeHTML(riskTwo.id)}"><span>R-02</span></div>`:''}
 </div><div class="risk-note">点击红色标注框，查看风险说明与建议替代方案。${state.realResult?'标注为结果示意位置，并非像素级目标检测框。':''}</div></div></div>
