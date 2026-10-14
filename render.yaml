@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: adlocalize-ai-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_BASE_URL
+        value: https://api.openai.com/v1
+      - key: OPENAI_MODEL
+        value: gpt-4o
+      - key: CORS_ORIGINS
+        value: http://localhost:8080,http://127.0.0.1:8080
+      - key: APP_ACCESS_PASSWORD
+        sync: false
+      - key: RATE_LIMIT_WINDOW_MS
+        value: "900000"
+      - key: RATE_LIMIT_MAX
+        value: "20"
+      - key: MODEL_TIMEOUT_MS
+        value: "55000"

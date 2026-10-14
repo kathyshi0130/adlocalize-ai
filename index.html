@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AdLocalize AI · 出海素材本地化合规 Agent</title>
+<style>
+  :root{
+    --blue:#1546c7;--blue-2:#2f68ed;--blue-dark:#082b83;--blue-pale:#eef4ff;
+    --ink:#15233d;--muted:#74819a;--line:#e6ebf3;--surface:#fff;--bg:#f5f7fb;
+    --green:#15966a;--green-bg:#eaf8f1;--amber:#b87308;--amber-bg:#fff5df;
+    --red:#d94150;--red-bg:#fff0f1;--shadow:0 4px 18px rgba(22,49,97,.055);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-width:1180px;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:13px;line-height:1.5}
+  button,input,select,textarea{font:inherit}button{cursor:pointer;transition:.18s ease}button:disabled{opacity:.55;cursor:not-allowed}
+  .topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 26px;position:sticky;top:0;z-index:20}
+  .brand{display:flex;align-items:center;gap:12px;min-width:415px}.brand-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(145deg,#1856e8,#0c2c8e);display:grid;place-items:center;color:#fff;box-shadow:0 5px 12px #1546c72b}
+  .brand-title{font-size:16px;font-weight:750;letter-spacing:-.35px}.brand-sub{font-size:10px;color:#8c98ad;margin-top:2px;letter-spacing:.6px}
+  .top-actions{display:flex;align-items:center;gap:22px}.top-metric{display:flex;align-items:center;gap:8px;padding-left:20px;border-left:1px solid var(--line)}.top-metric:first-child{border-left:0;padding-left:0}.metric-dot{width:7px;height:7px;border-radius:50%;background:#26b480}.top-label{color:var(--muted);font-size:11px}.top-value{font-weight:700;font-size:13px;margin-top:1px}.user-avatar{width:32px;height:32px;background:#e6edff;color:var(--blue);font-weight:800;border-radius:50%;display:grid;place-items:center}.user-meta{display:flex;align-items:center;gap:9px}.user-name{font-size:12px;font-weight:700}.user-role{font-size:10px;color:var(--muted)}
+  .app-wrap{padding:18px 20px 18px}.app-grid{display:grid;grid-template-columns:218px minmax(560px,1fr) 302px;gap:15px;align-items:stretch;max-width:1800px;margin:0 auto}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow)}
+  .sidebar{padding:17px 12px;min-height:720px}.side-head{padding:0 10px 15px;border-bottom:1px solid #f0f2f6}.small-cap{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#8793a9}.side-project{display:flex;align-items:center;gap:9px;margin-top:9px}.project-thumb{width:34px;height:34px;border-radius:9px;background:linear-gradient(145deg,#7d4cf4,#d14c80);display:grid;place-items:center;color:white;font-size:17px}.project-name{font-size:12px;font-weight:750}.project-desc{font-size:10px;color:var(--muted);margin-top:2px}
+  .workflow-list{padding-top:13px;display:flex;flex-direction:column;gap:4px}.step-nav{display:flex;gap:10px;align-items:center;text-align:left;background:transparent;border:1px solid transparent;border-radius:9px;padding:10px 9px;color:#65738a;width:100%;position:relative}.step-nav:hover{background:#f8faff;color:var(--blue)}.step-nav.active{background:var(--blue-pale);border-color:#d6e3ff;color:var(--blue)}.step-nav.done .step-num{background:#e6f7ef;color:var(--green);border-color:#c8ecdc}.step-num{flex:0 0 26px;height:26px;width:26px;border:1px solid #e0e6ef;border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:750;background:#fff}.step-nav.active .step-num{background:var(--blue);color:#fff;border-color:var(--blue)}.step-nav .nav-copy{min-width:0;flex:1}.step-name{font-size:11.5px;font-weight:700;white-space:nowrap}.step-mini{font-size:10px;color:#9aa4b5;margin-top:2px;white-space:nowrap}.step-nav.active .step-mini{color:#5e7cc5}.step-status{font-size:11px;color:var(--green)}
+  .side-bottom{margin:22px 7px 0;padding:13px 11px;background:#f8faff;border:1px solid #e7efff;border-radius:10px}.side-bottom-title{font-weight:750;font-size:11px;display:flex;align-items:center;justify-content:space-between}.side-bottom p{font-size:10.5px;color:var(--muted);margin:6px 0 10px}.mini-progress{height:5px;border-radius:8px;background:#e1e9f9;overflow:hidden}.mini-progress span{display:block;width:12.5%;height:100%;background:var(--blue);border-radius:8px;transition:width .3s}
+  .main{min-width:0}.main-head{padding:20px 22px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.eyebrow{font-size:10px;color:var(--blue);font-weight:800;letter-spacing:1.15px;text-transform:uppercase}.page-title{font-size:21px;letter-spacing:-.65px;margin:4px 0 5px;font-weight:800}.page-desc{font-size:12px;color:var(--muted);max-width:570px}.head-badges{display:flex;align-items:center;gap:7px;white-space:nowrap}.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:6px;font-size:10px;font-weight:750;white-space:nowrap}.pill-blue{background:#edf3ff;color:#2a5ac9}.pill-green{background:var(--green-bg);color:var(--green)}.pill-amber{background:var(--amber-bg);color:var(--amber)}.pill-red{background:var(--red-bg);color:var(--red)}.pill-gray{background:#f1f3f7;color:#6f7a8d}.live-dot{width:5px;height:5px;background:#21b77f;border-radius:50%;display:inline-block}
+  .step-content{margin:0 15px 15px;min-height:538px}.content-inner{padding:17px 19px 19px}.section-title{font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:10px}.section-sub{font-size:11px;color:var(--muted);margin-top:4px}.thin-line{height:1px;background:#edf0f5;margin:15px 0}
+  .btn{border:1px solid #dce4f0;border-radius:8px;background:#fff;color:#43526d;font-weight:700;padding:9px 13px;display:inline-flex;align-items:center;gap:7px;justify-content:center;box-shadow:0 1px 1px #0e265006}.btn:hover{border-color:#abc3ff;background:#f9fbff}.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 4px 10px #1546c721}.btn-primary:hover{background:#0e39ad;border-color:#0e39ad}.btn-secondary{background:#edf3ff;border-color:#edf3ff;color:var(--blue)}.btn-danger{color:var(--red);background:#fff;border-color:#ffd7dc}.btn-sm{padding:6px 9px;font-size:11px;border-radius:7px}.btn-icon{width:29px;height:29px;border:1px solid var(--line);background:#fff;color:#77839a;border-radius:7px;display:grid;place-items:center}
+  .btn-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px}.btn-row-right{display:flex;gap:8px;align-items:center}
+  .field-label{display:block;font-weight:750;font-size:11px;margin-bottom:7px;color:#46536b}.field-label .optional{font-weight:500;color:#9aa4b5}.input,select,textarea{width:100%;background:#fff;border:1px solid #dfe6f0;border-radius:8px;padding:10px 11px;color:#23314a;outline:none}.input:focus,select:focus,textarea:focus{border-color:#77a0ff;box-shadow:0 0 0 3px #eaf1ff}textarea{resize:vertical;min-height:100px;line-height:1.65}.form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.form-item{min-width:0}.help{font-size:10px;color:#929db0;margin-top:6px}
+  .upload-zone{border:1.5px dashed #bcccf0;border-radius:12px;background:linear-gradient(110deg,#f8faff,#fdfdff);min-height:140px;display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;cursor:pointer;transition:.2s}.upload-zone:hover,.upload-zone.dragover{border-color:var(--blue-2);background:#f1f6ff}.upload-icon{width:40px;height:40px;background:#e7efff;color:var(--blue);border-radius:11px;display:grid;place-items:center;margin:0 auto 8px;font-size:20px}.upload-title{font-weight:750;font-size:12px}.upload-desc{font-size:10.5px;color:var(--muted);margin:4px 0 9px}.file-chip{display:inline-flex;align-items:center;gap:7px;border-radius:7px;padding:6px 9px;background:#edf7f2;border:1px solid #d0eddf;color:#157b58;font-size:10px;margin-top:9px;max-width:100%;overflow:hidden}.asset-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:15px}.mock-ad{border:1px solid #e4e9f1;border-radius:10px;overflow:hidden}.mock-art{height:148px;position:relative;overflow:hidden;background:radial-gradient(circle at 75% 25%,#e9aa56 0 5%,transparent 6%),linear-gradient(145deg,#21134c 0%,#6833a2 40%,#ef7c4a 100%);display:flex;align-items:center;justify-content:center;color:#fff}.uploaded-preview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}.mock-art:before{content:"";position:absolute;width:220px;height:220px;border:1px solid #ffffff42;border-radius:50%;left:-35px;top:50px;box-shadow:0 0 0 18px #ffffff0b,0 0 0 40px #ffffff0a}.mock-art:after{content:"";position:absolute;width:98px;height:140px;background:linear-gradient(145deg,#32245e,#101632);border:2px solid #ffcf77;border-radius:46% 46% 22% 22%;right:28%;bottom:-25px;transform:rotate(-8deg);box-shadow:inset -14px 0 #fff1}.art-sun{position:absolute;top:20px;right:30px;width:45px;height:45px;border-radius:50%;background:#ffcc69;box-shadow:0 0 35px #ffc35a88}.art-title{position:absolute;left:15px;top:13px;font-size:10px;font-weight:900;letter-spacing:1.4px;color:#ffdf95}.art-subtitle{position:absolute;left:15px;bottom:14px;font-size:16px;font-weight:900;line-height:1.1;text-shadow:0 2px 8px #241046}.art-flag{position:absolute;border:2px solid #ff525f;border-radius:5px;z-index:2;display:flex;align-items:flex-start;gap:4px;padding:3px;background:#ff3d4e17}.art-flag span{background:#d92d42;color:white;border-radius:3px;font-size:9px;padding:2px 4px;white-space:nowrap}.flag-pig{width:30px;height:24px;left:57%;top:46px}.flag-hand{width:26px;height:31px;right:19%;bottom:18px}.mock-ad-info{padding:10px 12px}.mock-ad-title{font-weight:750;font-size:11px}.mock-ad-meta{color:var(--muted);font-size:10px;margin-top:3px;display:flex;justify-content:space-between}
+  .label-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.subtle{color:var(--muted)}.progress-wrap{background:#f0f3f9;height:6px;border-radius:8px;overflow:hidden;margin-top:12px;display:none}.progress-wrap.show{display:block}.progress-bar{height:100%;width:0;background:linear-gradient(90deg,#2255db,#54a0ff);transition:width .25s;border-radius:8px}.processing-note{font-size:10px;color:var(--blue);margin-top:7px;min-height:15px}
+  .target-summary{display:flex;align-items:center;gap:9px;padding:11px 12px;background:#f8faff;border:1px solid #e5edff;border-radius:9px;margin-top:14px}.flag-icon{width:34px;height:34px;display:grid;place-items:center;background:#fff;border:1px solid #e5eaf3;border-radius:8px;font-size:17px}.target-head{font-weight:750;font-size:11px}.target-meta{font-size:10px;color:var(--muted);margin-top:2px}.summary-spacer{flex:1}
+  .risk-layout{display:grid;grid-template-columns:1fr 1fr;gap:15px}.risk-preview{border:1px solid #e3e8f1;border-radius:10px;overflow:hidden}.risk-preview-head{padding:10px 12px;background:#fafbfe;border-bottom:1px solid #edf0f5;display:flex;justify-content:space-between;align-items:center}.risk-preview-body{padding:13px}.risk-note{font-size:10px;color:var(--muted);margin-top:8px}.risk-list{display:flex;flex-direction:column;gap:9px}.risk-item{display:flex;gap:10px;padding:11px;border:1px solid #f0d5d8;background:#fffafa;border-radius:9px}.risk-icon{width:27px;height:27px;border-radius:7px;background:#ffe4e7;color:#ca3042;display:grid;place-items:center;flex:0 0 27px;font-weight:900}.risk-item-title{font-weight:800;font-size:11px;color:#a82b3a}.risk-item-desc{font-size:10.5px;color:#6f788a;margin-top:3px}.risk-action{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.safe-tip{padding:11px;border:1px solid #d6eee2;background:#f5fcf8;border-radius:9px;color:#32785d;font-size:10.5px;margin-top:10px}
+  .tone-select{display:flex;gap:8px;flex-wrap:wrap}.tone-option{display:flex;align-items:center;gap:7px;border:1px solid #e1e7f1;border-radius:8px;padding:8px 12px;background:#fff;color:#5b6981;font-size:11px}.tone-option input{accent-color:var(--blue)}.tone-option.selected{border-color:#a7bfff;background:#f3f7ff;color:var(--blue);font-weight:750}.copy-card{border:1px solid #e2e8f1;border-radius:10px;padding:12px;margin-top:10px}.copy-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.copy-language{font-size:11px;font-weight:800;display:flex;align-items:center;gap:7px}.copy-body{font-size:12px;line-height:1.75;color:#334159;margin:9px 0 0;background:#f8faff;padding:10px;border-radius:7px}.copy-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;color:#9aa4b5;font-size:10px}
+  .compliance-summary{display:flex;align-items:center;gap:12px;padding:14px;border-radius:10px;background:#fff9ec;border:1px solid #f8e3b7}.compliance-emblem{width:38px;height:38px;display:grid;place-items:center;border-radius:10px;background:#ffefc6;color:#b77808;font-size:18px}.compliance-title{font-size:13px;font-weight:850}.compliance-sub{font-size:10.5px;color:#887454;margin-top:3px}.compliance-rules{display:flex;flex-direction:column;gap:8px;margin-top:13px}.rule-row{display:flex;align-items:flex-start;gap:10px;padding:11px;border:1px solid #e6ebf2;border-radius:9px}.rule-state{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-size:12px;flex:0 0 22px;font-weight:900}.state-pass{background:#e5f8ef;color:#11865c}.state-review{background:#fff0d4;color:#b77a0c}.rule-title{font-weight:750;font-size:11px}.rule-desc{font-size:10.5px;color:var(--muted);margin-top:3px}.rule-right{margin-left:auto;white-space:nowrap}
+  .format-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:15px}.format-card{border:1px solid #e1e7f0;border-radius:10px;padding:10px}.format-card.selected{border-color:#8eb0ff;box-shadow:0 0 0 2px #edf3ff}.format-preview{height:116px;border:1px solid #e7eaf2;background:#f6f8fc;border-radius:7px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}.preview-poster{background:linear-gradient(155deg,#23145c,#8e3ca5 55%,#f78b52);position:relative;overflow:hidden;color:#ffe9a7;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;letter-spacing:.3px;padding:10px;text-shadow:0 2px 6px #28134a}.preview-poster:before{content:"";position:absolute;width:70%;height:70%;border-radius:50%;border:1px solid #fff7;top:5%;right:-10%}.preview-poster span{position:relative;z-index:1}.preview-tall{height:98px;width:55px;font-size:10px}.preview-square{height:83px;width:83px;font-size:10px}.preview-wide{width:120px;height:68px;font-size:10px}.format-name{font-size:11px;font-weight:800;margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:7px}.format-meta{font-size:10px;color:var(--muted);margin-top:3px}.format-time{font-size:10px;color:#52627c;margin-top:8px;display:flex;justify-content:space-between}.tiny-check{accent-color:var(--blue)}
+  .variant-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-top:14px}.variant-card{border:1px solid #e2e8f1;border-radius:10px;overflow:hidden}.variant-top{padding:10px 11px;background:#f9fbff;border-bottom:1px solid #edf0f5;display:flex;align-items:center;justify-content:space-between}.variant-id{font-size:11px;font-weight:850}.variant-body{padding:12px}.variant-hook{font-size:10px;color:var(--blue);font-weight:800;letter-spacing:.4px}.variant-copy{font-size:12px;line-height:1.7;color:#334159;margin:7px 0 12px;min-height:89px}.variant-test{font-size:10px;color:#7c879b;background:#f6f8fb;padding:8px;border-radius:7px;min-height:48px}.variant-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;font-size:10px;color:#8994a7}
+  .export-hero{padding:17px;border-radius:11px;background:linear-gradient(115deg,#edf4ff,#f9fbff);border:1px solid #dbe7ff;display:flex;align-items:center;gap:13px}.export-symbol{width:48px;height:48px;border-radius:13px;background:var(--blue);color:white;display:grid;place-items:center;font-size:23px;box-shadow:0 6px 14px #1546c72c}.export-title{font-size:15px;font-weight:850}.export-sub{font-size:11px;color:#687c9d;margin-top:4px}.export-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:13px}.export-stat{border:1px solid #e6ebf2;border-radius:9px;padding:11px}.export-stat-label{color:var(--muted);font-size:10px}.export-stat-value{font-size:18px;font-weight:850;margin-top:4px;letter-spacing:-.4px}.package-list{display:flex;flex-direction:column;gap:8px;margin-top:13px}.package-row{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid #e7ebf2;border-radius:8px}.package-file-icon{width:29px;height:29px;background:#edf3ff;color:var(--blue);border-radius:7px;display:grid;place-items:center;font-weight:850}.package-name{font-size:10.5px;font-weight:750}.package-meta{font-size:9.5px;color:#99a3b4;margin-top:2px}.package-row .package-status{margin-left:auto}
+  .right-panel{padding:15px 13px;min-height:720px;display:flex;flex-direction:column}.right-head{display:flex;align-items:center;justify-content:space-between;padding:1px 2px 13px;border-bottom:1px solid #edf0f5}.right-title{font-weight:850;font-size:13px;display:flex;align-items:center;gap:8px}.agent-orb{width:25px;height:25px;border-radius:8px;background:#eaf1ff;color:var(--blue);display:grid;place-items:center}.right-head-sub{font-size:10px;color:var(--muted);margin-top:3px}.connection{font-size:9px;color:var(--green);display:flex;align-items:center;gap:5px}.log-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 0}.log-summary-cell{border:1px solid #edf0f5;border-radius:8px;padding:9px}.log-summary-label{font-size:9px;color:var(--muted)}.log-summary-value{font-size:15px;font-weight:850;margin-top:3px}.logs{display:flex;flex-direction:column;gap:0;overflow:auto;max-height:390px;padding-right:2px;scrollbar-width:thin;scrollbar-color:#d5deed transparent}.log-item{display:grid;grid-template-columns:24px 1fr;gap:8px;padding:11px 0;border-bottom:1px solid #f0f2f6}.log-timeline{display:flex;flex-direction:column;align-items:center}.log-node{width:21px;height:21px;border-radius:7px;background:#f0f3f8;color:#8c97aa;display:grid;place-items:center;font-size:10px;font-weight:800}.log-node.success{background:#e6f7ef;color:#16845c}.log-node.running{background:#eaf1ff;color:var(--blue);animation:pulse 1.5s infinite}.log-node.warn{background:#fff1d7;color:#b7770b}.log-main{min-width:0}.log-top{display:flex;justify-content:space-between;align-items:flex-start;gap:4px}.log-agent{font-size:10.5px;font-weight:800}.log-time{font-size:9px;color:#a1aabc;white-space:nowrap}.log-message{font-size:10px;color:#7f8a9d;margin-top:3px;line-height:1.45}.log-meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:5px;font-size:9px;color:#9aa4b5}.log-meta b{color:#64728a;font-weight:750}.log-empty{padding:24px 5px;text-align:center;color:#a1aabb;font-size:10px}.log-footer{margin-top:auto;padding-top:12px}.log-footer-note{font-size:9.5px;color:#939fb1;display:flex;align-items:center;gap:6px}.log-footer-note svg{color:#7b8ba7}
+  .dashboard{margin:15px auto 0;max-width:1800px;background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);padding:15px 18px 17px}.dash-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.dash-title{font-size:12px;font-weight:850;display:flex;align-items:center;gap:8px}.dash-caption{font-size:10px;color:var(--muted)}.dashboard-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.dash-card{border:1px solid #e8edf4;border-radius:10px;padding:12px;position:relative;overflow:hidden}.dash-card:after{content:"";position:absolute;width:52px;height:52px;border-radius:50%;background:#f4f7fe;right:-17px;top:-20px}.dash-card-label{font-size:10px;color:var(--muted);position:relative;z-index:1}.dash-card-value{font-size:21px;letter-spacing:-.7px;font-weight:850;margin-top:6px;position:relative;z-index:1}.dash-card-foot{font-size:9.5px;margin-top:4px;color:#9aa4b5;position:relative;z-index:1}.dash-highlight{color:var(--green)}.dash-blue{color:var(--blue)}.bottom-note{display:flex;align-items:center;justify-content:space-between;color:#9aa4b5;font-size:9px;margin-top:12px;padding:0 2px}
+  .modal-backdrop{position:fixed;inset:0;background:#14213a55;display:none;align-items:center;justify-content:center;padding:20px;z-index:60}.modal-backdrop.show{display:flex}.modal{width:480px;max-width:95vw;background:#fff;border-radius:14px;box-shadow:0 22px 70px #06173836;overflow:hidden;animation:slideup .2s ease}.modal-head{display:flex;align-items:center;justify-content:space-between;padding:17px 19px;border-bottom:1px solid #edf0f5}.modal-title{font-size:14px;font-weight:850;display:flex;gap:8px;align-items:center}.modal-body{padding:17px 19px}.modal-body p{font-size:12px;line-height:1.75;color:#59677f;margin:0 0 13px}.suggestion-box{padding:12px;border:1px solid #d8e7ff;background:#f5f8ff;border-radius:9px}.suggestion-label{font-size:10px;color:var(--blue);font-weight:850;margin-bottom:5px}.suggestion-text{font-size:11px;line-height:1.7;color:#334b79}.modal-foot{display:flex;justify-content:flex-end;gap:8px;padding:13px 19px;background:#fafbfe;border-top:1px solid #edf0f5}
+  .toast-container{position:fixed;top:86px;left:50%;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:8px;pointer-events:none}.toast{min-width:270px;background:#15233d;color:white;border-radius:9px;padding:11px 14px;box-shadow:0 9px 28px #11234b35;display:flex;align-items:center;gap:8px;font-size:11px;animation:fadein .18s ease}.toast .toast-check{background:#2dbb83;color:#fff;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-weight:900}
+  .subhead-row{display:flex;align-items:center;justify-content:space-between;margin:16px 0 9px}.subhead-row strong{font-size:11px}.text-link{border:0;background:transparent;color:var(--blue);font-size:10.5px;font-weight:750;padding:3px}.text-link:hover{text-decoration:underline}.select-inline{border:1px solid #dfe6f0;border-radius:7px;background:#fff;padding:6px 8px;font-size:10px;color:#51617c}
+  .mode-control{display:inline-flex;align-items:center;gap:6px;padding:3px 5px 3px 8px;border:1px solid #e2e8f2;border-radius:8px;background:#fff;color:#65738a;font-size:10px;font-weight:750;white-space:nowrap}.mode-control .select-inline{border:0;padding:4px 5px;background:#f6f8fc;color:#24447e;font-weight:800;outline:none}.mode-control:focus-within{border-color:#9ab7ff;box-shadow:0 0 0 2px #eaf1ff}.api-pulse{animation:pulse 1.2s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 #1c55d51c}50%{box-shadow:0 0 0 5px #1c55d512}}@keyframes slideup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@keyframes fadein{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:1370px){.app-grid{grid-template-columns:200px minmax(520px,1fr) 280px;gap:11px}.topbar{padding:0 18px}.app-wrap{padding:14px}.step-content{margin:0 11px 11px}.content-inner{padding:15px}.page-title{font-size:19px}.right-panel{padding:13px 11px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 17.8 10.2 4l3.1 6.5L20 7l-6.2 13-3-6.5L4 17.8Z" stroke="white" stroke-width="1.8" stroke-linejoin="round"/><path d="m13.3 10.5 2.5-1.2" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+    <div><div class="brand-title">AdLocalize AI <span style="color:#b9c3d3;font-weight:500">·</span> 出海素材本地化合规 Agent</div><div class="brand-sub">CREATIVE OPS INTELLIGENCE PLATFORM</div></div>
+  </div>
+  <div class="top-actions">
+    <div class="top-metric"><span class="metric-dot"></span><div><div class="top-label">工作区状态</div><div class="top-value">Agent 集群在线</div></div></div>
+    <div class="top-metric"><div><div class="top-label">本次 Token 消耗</div><div class="top-value"><span id="top-token">0</span> <span style="font-size:10px;color:#8a97ad;font-weight:500">Tokens</span></div></div></div>
+    <div class="top-metric"><div><div class="top-label">自动化率</div><div class="top-value" id="top-auto">92.0%</div></div></div>
+    <div class="user-meta"><div class="user-avatar">林</div><div><div class="user-name">林予安 <span style="color:#9aa4b5;font-weight:500">⌄</span></div><div class="user-role">Creative Operations</div></div></div>
+  </div>
+</header>
+<div class="app-wrap">
+  <div class="app-grid">
+    <aside class="sidebar panel">
+      <div class="side-head"><div class="small-cap">当前项目 / Project</div><div class="side-project"><div class="project-thumb">⚔</div><div><div class="project-name">Fantasy Quest · 印尼首发</div><div class="project-desc">游戏行业 · 新用户增长素材</div></div></div></div>
+      <div class="workflow-list" id="workflow-list"></div>
+      <div class="side-bottom"><div class="side-bottom-title"><span>工作流进度</span><span id="progress-label">1 / 8</span></div><p id="progress-description">开始配置你的本地化任务。</p><div class="mini-progress"><span id="workflow-progress"></span></div></div>
+    </aside>
+
+    <main class="main panel">
+      <div class="main-head"><div><div class="eyebrow" id="page-eyebrow">STEP 01 / INPUT</div><h1 class="page-title" id="page-title">导入原始素材</h1><div class="page-desc" id="page-desc">导入图片、视频或原始中文文案，作为本次 Agent 工作流的输入。</div></div><div class="head-badges"><span class="pill pill-blue" id="runtime-mode-pill"><span class="live-dot"></span> 模拟模式</span><label class="mode-control" for="execution-mode"><span>运行模式</span><select id="execution-mode" class="select-inline" aria-label="选择运行模式"><option value="simulation">模拟</option><option value="real">真实 API</option></select></label><span class="pill pill-gray" id="api-status-pill">API 未调用</span><span class="pill pill-gray" id="step-pill">等待输入</span></div></div>
+      <section class="step-content" id="step-content"></section>
+    </main>
+
+    <aside class="right-panel panel">
+      <div class="right-head"><div><div class="right-title"><span class="agent-orb">✦</span> Agent 实时日志</div><div class="right-head-sub">工作流执行追踪与资源消耗</div></div><span class="connection"><span class="live-dot"></span> LIVE</span></div>
+      <div class="log-summary"><div class="log-summary-cell"><div class="log-summary-label">已完成任务</div><div class="log-summary-value"><span id="log-completed">0</span><span style="font-size:10px;color:#9aa4b5;font-weight:500"> / 8</span></div></div><div class="log-summary-cell"><div class="log-summary-label">累计耗时</div><div class="log-summary-value" id="log-elapsed">00:00</div></div></div>
+      <div class="logs" id="logs"><div class="log-empty" id="log-empty">Agent 等待指令中<br><span style="font-size:9px">执行后将在此显示状态、Token 与耗时</span></div></div>
+      <div class="log-footer"><div class="log-footer-note"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 3 4.8 6v5.2c0 4.5 3 7.8 7.2 9.8 4.2-2 7.2-5.3 7.2-9.8V6L12 3Z" stroke="currentColor" stroke-width="1.7"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span id="log-privacy-note">模拟模式日志在本地生成；真实模式会将输入发送至你配置的后端与模型服务。</span></div><div style="margin-top:9px;display:flex;gap:7px"><button class="btn btn-sm" style="flex:1" id="clear-logs">清空日志</button><button class="btn btn-sm" style="flex:1" id="run-current-agent">运行当前 Agent ↗</button></div></div>
+    </aside>
+  </div>
+
+  <section class="dashboard">
+    <div class="dash-head"><div class="dash-title"><span style="color:var(--blue)">▥</span> 本次任务 · 效率指标</div><div class="dash-caption">根据模拟 Agent 运行结果实时更新 <span style="margin-left:9px;color:#b0b8c6">更新于刚刚</span></div></div>
+    <div class="dashboard-grid">
+      <div class="dash-card"><div class="dash-card-label">模拟处理耗时</div><div class="dash-card-value dash-blue" id="metric-elapsed">00:00</div><div class="dash-card-foot">目标市场：印尼 · TikTok</div></div>
+      <div class="dash-card"><div class="dash-card-label">人工处理时间对比</div><div class="dash-card-value" id="metric-manual">2h <span style="font-size:12px;color:#9aa4b5;font-weight:600">→</span> 15m</div><div class="dash-card-foot"><span class="dash-highlight">预计减少 87.5%</span> · 单条素材</div></div>
+      <div class="dash-card"><div class="dash-card-label">Token 总消耗</div><div class="dash-card-value" id="metric-token">0</div><div class="dash-card-foot">按 Agent 调用累计</div></div>
+      <div class="dash-card"><div class="dash-card-label">预估节省成本</div><div class="dash-card-value dash-highlight" id="metric-saving">¥ 480</div><div class="dash-card-foot">以人工复核与制作成本估算</div></div>
+      <div class="dash-card"><div class="dash-card-label">自动化率</div><div class="dash-card-value" id="metric-auto">92.0%</div><div class="dash-card-foot">目标值 ≥ 90% <span style="color:#15966a">● 达成</span></div></div>
+    </div>
+    <div class="bottom-note"><span>AdLocalize AI · Internal Creative Workflow Prototype</span><span>演示数据仅用于产品交互展示，不构成法律意见或真实合规结论</span></div>
+  </section>
+</div>
+
+<div class="modal-backdrop" id="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal"><div class="modal-head"><div class="modal-title" id="modal-title"><span style="color:var(--red)">⚠</span> 文化风险建议</div><button class="btn-icon" id="modal-x" aria-label="关闭">✕</button></div><div class="modal-body" id="modal-body"></div><div class="modal-foot"><button class="btn" id="modal-cancel">稍后处理</button><button class="btn btn-primary" id="modal-apply">应用建议并记录</button></div></div></div>
+<div class="toast-container" id="toast-container" aria-live="polite"></div>
+<input type="file" id="file-input" accept="image/*,video/*" multiple hidden />
+
+<script>
+// =============================================================
+// 客户端部署配置：这里只能放公开配置，严禁放模型 API Key。
+// 本地测试可使用 http://localhost:3000；部署后替换为 Render 后端 URL。
+// 例如：https://adlocalize-api.onrender.com（不要在末尾加 /）
+// =============================================================
+const CLIENT_CONFIG = {
+  API_BASE_URL: "http://localhost:3000",
+  REQUEST_TIMEOUT_MS: 65000,
+  MAX_IMAGE_EDGE: 1600,
+  // 图片会压缩为 JPEG 后发送，避免 JSON 请求过大；源文件仍只用于本地预览。
+  IMAGE_JPEG_QUALITY: 0.82
+};
+
+// =============================================================
+// AdLocalize AI · 原型模拟数据区：模拟模式仍使用此对象作为保底。
+// =============================================================
+const APP_DATA = {
+  user: { name: "林予安", role: "Creative Operations" },
+  steps: [
+    { title: "导入原始素材", mini: "图片 / 视频 / 文案", eyebrow: "STEP 01 / INPUT", desc: "导入图片、视频或原始中文文案，作为本次 Agent 工作流的输入。", agent: "素材解析 Agent", status: "等待输入" },
+    { title: "配置目标市场", mini: "国家 / 语言 / 平台", eyebrow: "STEP 02 / TARGETING", desc: "定义目标国家、交付语言、投放平台与品牌沟通语气。", agent: "市场配置 Agent", status: "待配置" },
+    { title: "文化适配检测", mini: "文化风险 / 替换建议", eyebrow: "STEP 03 / CULTURE CHECK", desc: "识别目标市场的文化敏感元素，提供可执行的视觉替换与文案调整建议。", agent: "文化适配 Agent", status: "待检测" },
+    { title: "生成本地化文案", mini: "多语言 / 语气调节", eyebrow: "STEP 04 / LOCAL COPY", desc: "生成贴合当地语言习惯的广告文案，并根据投放目标调整表达语气。", agent: "多语言文案 Agent", status: "待生成" },
+    { title: "合规审核", mini: "法规 / 平台政策", eyebrow: "STEP 05 / COMPLIANCE", desc: "按隐私、当地广告法及平台政策进行规则扫描，区分可交付与需人工复核内容。", agent: "合规审核 Agent", status: "待审核" },
+    { title: "规格自动适配", mini: "比例 / 时长 / 平台", eyebrow: "STEP 06 / RESIZE", desc: "为不同投放场景准备竖屏、方形与横屏规格，并给出画面和时长建议。", agent: "素材规格 Agent", status: "待适配" },
+    { title: "生成 A/B 测试变体", mini: "多个创意 / 测试假设", eyebrow: "STEP 07 / EXPERIMENT", desc: "从不同创意角度生成变体，并为投放团队提供清晰的测试假设。", agent: "A/B 测试 Agent", status: "待生成" },
+    { title: "导出交付素材包", mini: "素材清单 / 处理报告", eyebrow: "STEP 08 / EXPORT", desc: "检查交付物、生成处理报告，并打包导出本次模拟素材资产。", agent: "交付打包 Agent", status: "待导出" }
+  ],
+  markets: [
+    { value: "印尼", language: "印尼语", flag: "🇮🇩", code: "ID" },
+    { value: "美国", language: "英语", flag: "🇺🇸", code: "US" },
+    { value: "德国", language: "德语", flag: "🇩🇪", code: "DE" },
+    { value: "日本", language: "日语", flag: "🇯🇵", code: "JP" }
+  ],
+  platforms: ["TikTok", "Meta", "Google"],
+  tones: ["专业可信", "活泼有趣", "年轻化"],
+  sample: {
+    project: "Fantasy Quest · 印尼首发",
+    fileName: "fantasy_quest_launch_creative.png",
+    originalCopy: "成为战场最强王者！充值双倍战力，一夜登顶！限时奖励等你来拿。",
+    source: "中文原始广告文案",
+    creative: "游戏出海广告 · Fantasy Quest",
+    format: "PNG 图片 · 1080 × 1920"
+  },
+  risks: [
+    { id: "pig", title: "猪形象 / Pig motif", level: "高风险", description: "在印尼市场，猪相关形象可能触发宗教与饮食文化敏感性。当前示例画面检测到疑似猪形象装饰。", suggestion: "替换为中性幻想生物、龙形徽章或抽象能量符号；避免让猪形象成为视觉主角。" },
+    { id: "hand", title: "左手手势 / Left-hand gesture", level: "中风险", description: "部分印尼文化场景对左手动作存在礼仪顾虑。当前示例素材人物姿势需要二次确认。", suggestion: "将动作改为双手持剑、右手挥手或无指向性姿势；发布前由当地审核人员确认画面语境。" }
+  ],
+  copies: {
+    "印尼语": { headline: "Siap Jadi Legenda?", body: "Masuki dunia Fantasy Quest! Bangun strategimu, kumpulkan hadiah spesial, dan mulailah petualanganmu hari ini.", cta: "Mainkan Sekarang", note: "弱化夸张战力承诺，采用冒险与奖励导向表达。" },
+    "英语": { headline: "Your Next Epic Adventure Awaits", body: "Enter Fantasy Quest, build your strategy, collect special rewards, and start your next adventure today.", cta: "Play Now", note: "强调玩法与探索，避免保证排名或效果。" },
+    "德语": { headline: "Dein nächstes Abenteuer beginnt", body: "Entdecke Fantasy Quest, entwickle deine Strategie und sichere dir besondere Belohnungen auf deiner Reise.", cta: "Jetzt spielen", note: "采用清晰、克制的承诺表达。" },
+    "日语": { headline: "新たな冒険を始めよう", body: "Fantasy Questの世界へ。戦略を練り、特別な報酬を集めながら、自分だけの冒険を楽しもう。", cta: "今すぐプレイ", note: "使用自然、轻松的游戏宣传语气。" }
+  },
+  complianceRules: [
+    { id: "gdpr", title: "GDPR · 用户数据与同意机制", status: "review", detail: "如广告落地页收集或追踪用户数据，需确认告知、合法依据与同意机制；当前素材未包含落地页信息，需联动检查。" },
+    { id: "tiktok", title: "TikTok · 夸大效果与误导性承诺", status: "review", detail: "原始文案“一夜登顶”可能造成结果保证式暗示。建议改为“开启冒险 / 收集奖励”，避免暗示必然达成游戏结果。" },
+    { id: "meta", title: "Meta · 误导性健康声明", status: "pass", detail: "当前素材为游戏推广，未发现健康功效或治疗效果声明。正式投放仍需结合完整落地页与目标受众复核。" },
+    { id: "local", title: "目标市场广告与文化要求", status: "review", detail: "猪相关视觉元素与手势语境需经印尼本地审核确认；该判断为示例规则，不代表完整的法律审查。" }
+  ],
+  formats: [
+    { id: "vertical", name: "竖屏短视频", ratio: "9:16", size: "1080 × 1920", duration: "15 秒", platform: "TikTok / Reels", selected: true },
+    { id: "square", name: "方形信息流", ratio: "1:1", size: "1080 × 1080", duration: "15–30 秒", platform: "Meta Feed", selected: true },
+    { id: "landscape", name: "横屏视频", ratio: "16:9", size: "1920 × 1080", duration: "30 秒", platform: "Google / YouTube", selected: true }
+  ],
+  variants: [
+    { id: "A", color: "#2858d8", concept: "探索驱动", hook: "DISCOVERY / 探索感", copy: "Masuki dunia Fantasy Quest dan temukan petualangan yang menantimu. Susun strategi, jelajahi dunia baru, dan kumpulkan hadiah spesial!", test: "假设：突出世界探索，能提升新用户点击率。", metric: "CTR" },
+    { id: "B", color: "#8b4ad8", concept: "奖励驱动", hook: "REWARD / 奖励感", copy: "Petualangan seru dengan hadiah spesial menantimu di Fantasy Quest. Mulai bermain hari ini dan temukan kejutan di setiap perjalanan!", test: "假设：突出奖励价值，能带来更高的安装转化。", metric: "CVR" },
+    { id: "C", color: "#d66e39", concept: "社交挑战", hook: "CHALLENGE / 挑战感", copy: "Bentuk strategimu, hadapi tantangan baru, dan tulis kisahmu sendiri di Fantasy Quest. Petualangan berikutnya dimulai sekarang!", test: "假设：突出策略与挑战，能提高视频完播率。", metric: "VTR" }
+  ],
+  agents: [
+    { step: 0, name: "素材解析 Agent", token: 320, duration: "1.2s", description: "识别输入素材类型与文案结构" },
+    { step: 1, name: "市场配置 Agent", token: 180, duration: "1.0s", description: "匹配目标市场、语言与投放平台" },
+    { step: 2, name: "文化适配 Agent", token: 1200, duration: "1.8s", description: "扫描敏感视觉元素并生成替换建议" },
+    { step: 3, name: "多语言文案 Agent", token: 2500, duration: "1.9s", description: "生成目标语言广告文案与 CTA" },
+    { step: 4, name: "合规审核 Agent", token: 1800, duration: "1.7s", description: "校验隐私、平台政策与本地风险规则" },
+    { step: 5, name: "素材规格 Agent", token: 860, duration: "1.4s", description: "规划不同比例、分辨率和时长版本" },
+    { step: 6, name: "A/B 测试 Agent", token: 1100, duration: "1.5s", description: "生成多创意变体与测试假设" },
+    { step: 7, name: "交付打包 Agent", token: 420, duration: "1.1s", description: "汇总素材清单并生成处理报告" }
+  ]
+};
+
+const state = {
+  step: 0,
+  mode: "simulation", // simulation | real
+  realResult: null,
+  analysisImageDataUrl: null, // 压缩后的图片/视频关键帧，只在真实模式发送到后端
+  completed: new Set(),
+  running: false,
+  totalTokens: 0,
+  totalElapsed: 0,
+  logCount: 0,
+  selectedMarket: "印尼",
+  selectedLanguage: "印尼语",
+  selectedPlatform: "TikTok",
+  tone: "活泼有趣",
+  originalCopy: APP_DATA.sample.originalCopy,
+  fileName: APP_DATA.sample.fileName,
+  fileType: "图片",
+  fileSize: "1.8 MB",
+  uploadObjectUrl: null,
+  cultureApplied: false,
+  cultureSeen: new Set(),
+  copiesGenerated: false,
+  complianceRun: false,
+  formatsRun: false,
+  variantsRun: false,
+  exported: false,
+  selectedFormats: new Set(["vertical","square","landscape"]),
+  selectedVariant: "A",
+  processStarted: false,
+  modalRiskId: "pig",
+  lastAgentRun: null
+};
+
+const $ = id => document.getElementById(id);
+const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const currentMarket = () => APP_DATA.markets.find(m => m.value === state.selectedMarket) || APP_DATA.markets[0];
+function localizedCopy(){
+  const t = state.realResult && state.realResult.translation;
+  if (t && t.translatedText) return {
+    headline: `${t.targetLanguage || state.selectedLanguage} · AI 本地化文案`,
+    body: t.translatedText,
+    cta: "见上方生成文案",
+    note: `真实模型生成 · 语气：${t.tone || state.tone} · 发布前请母语者校对。`
+  };
+  return APP_DATA.copies[state.selectedLanguage] || APP_DATA.copies["印尼语"];
+}
+function currentCultureRisks(){
+  const risks = state.realResult?.cultural?.risks;
+  if (!Array.isArray(risks)) return APP_DATA.risks;
+  return risks.map((r,i)=>({
+    id:`real-risk-${i+1}`, title:r.element || `文化风险 ${i+1}`,
+    level:/高|high|critical/i.test(`${r.severity||""} ${r.reason||""}`)?"高风险":"需关注",
+    description:`${r.market || state.selectedMarket}：${r.reason || "模型建议进一步确认该元素的当地语境。"}`,
+    suggestion:r.suggestion || "交由目标市场本地审核人员确认。"
+  }));
+}
+function currentComplianceRows(){
+  const comp = state.realResult?.compliance;
+  if (!comp) return APP_DATA.complianceRules;
+  const issues = Array.isArray(comp.issues) ? comp.issues : [];
+  if (!issues.length) return [{id:"real-compliance-pass",title:"模型综合审核",status:comp.status==="通过"?"pass":"review",detail:comp.status==="通过"?"模型未发现明确命中的检查项；仍需结合落地页、受众与平台最新规则人工确认。":"模型建议人工复核完整投放上下文。"}];
+  return issues.map((i,n)=>({id:`real-compliance-${n}`,title:`${i.rule || "合规检查"}${i.severity?` · ${i.severity}`:""}`,status:"review",detail:`命中内容：${i.text || "未提供"}。建议：${i.suggestion || "交由合规人员复核。"}`}));
+}
+function currentVariants(){
+  const vars = state.realResult?.abVariants;
+  if (!Array.isArray(vars) || !vars.length) return APP_DATA.variants;
+  const palette=["#2858d8","#8b4ad8","#d66e39"];
+  return vars.slice(0,3).map((v,i)=>({
+    id:String(v.version || String.fromCharCode(65+i)), color:palette[i%palette.length],
+    concept:v.angle || ["探索驱动","效果导向","价格敏感"][i%3],
+    hook:`${String(v.angle || "LOCALIZED ANGLE").toUpperCase()} / 本地化角度`,
+    copy:v.text || "（模型未返回文案）", test:`测试假设：验证“${v.angle || "该创意角度"}”对目标受众的影响。`,
+    metric:["CTR","CVR","VTR"][i%3]
+  }));
+}
+function setApiStatus(text, kind="gray", busy=false){
+  const el=$("api-status-pill"); if(!el)return;
+  el.textContent=text; el.className=`pill ${kind==="green"?"pill-green":kind==="amber"?"pill-amber":kind==="red"?"pill-red":"pill-gray"}${busy?" api-pulse":""}`;
+}
+function updateModeUI(){
+  const sel=$("execution-mode"), pill=$("runtime-mode-pill");
+  if(sel && sel.value!==state.mode)sel.value=state.mode;
+  if(pill){pill.className=`pill ${state.mode==="real"?"pill-blue":"pill-gray"}`;pill.innerHTML=`<span class="live-dot"></span> ${state.mode==="real"?"真实 API 模式":"模拟模式"}`;}
+  const privacy=$("log-privacy-note");if(privacy)privacy.textContent=state.mode==="real"?"真实模式会将输入发送至已配置的后端与模型服务；请勿上传未经授权的客户数据。":"模拟模式数据在本地生成，不发送到模型服务。";
+}
+function invalidateRealResult(){ state.realResult=null; }
+
+function init(){ renderWorkflow(); renderStep(); bindGlobalEvents(); updateMetrics(); updateModeUI(); addLog({kind:"info",name:"工作流调度器",message:"环境初始化完成。默认使用模拟模式；需要真实分析时切换为真实 API，并部署后端代理。",token:0,duration:"—"}); }
+
+function renderWorkflow(){
+  const host = $("workflow-list");
+  host.innerHTML = APP_DATA.steps.map((s,i)=>{
+    const done = state.completed.has(i);
+    return `<button class="step-nav ${state.step===i?'active':''} ${done?'done':''}" data-step="${i}" type="button"><span class="step-num">${done?'✓':String(i+1).padStart(2,'0')}</span><span class="nav-copy"><span class="step-name">${s.title}</span><span class="step-mini">${s.mini}</span></span>${done?'<span class="step-status">✓</span>':''}</button>`;
+  }).join("");
+  host.querySelectorAll("[data-step]").forEach(btn=>btn.addEventListener("click",()=>{
+    const next = Number(btn.dataset.step);
+    if(state.running){toast("Agent 正在执行，请稍候完成当前任务。");return;}
+    state.step = next; renderWorkflow(); renderStep(); addLog({kind:"info",name:"工作流导航",message:`切换至步骤 ${next+1}：${APP_DATA.steps[next].title}`,token:0,duration:"—"});
+  }));
+  const completed = state.completed.size;
+  $("progress-label").textContent = `${Math.max(1,state.step+1)} / 8`;
+  $("progress-description").textContent = completed===8 ? "全部步骤已完成，可导出交付包。" : `已完成 ${completed} 个步骤，继续推进交付流程。`;
+  $("workflow-progress").style.width = `${completed/8*100}%`;
+}
+
+function renderStep(){
+  const data=APP_DATA.steps[state.step];
+  $("page-eyebrow").textContent=data.eyebrow;
+  $("page-title").textContent=data.title;
+  $("page-desc").textContent=data.desc;
+  $("step-pill").textContent=state.completed.has(state.step)?"已完成":data.status;
+  const renderers=[renderUploadStep,renderMarketStep,renderCultureStep,renderCopyStep,renderComplianceStep,renderFormatStep,renderVariantsStep,renderExportStep];
+  $("step-content").innerHTML=renderers[state.step]();
+  bindStepEvents();
+}
+
+function stepFooter(prevLabel="返回上一步", nextLabel="保存并继续", nextAction="next"){
+  return `<div class="progress-wrap" id="step-progress"><div class="progress-bar" id="step-progress-bar"></div></div><div class="processing-note" id="processing-note"></div><div class="btn-row"><button class="btn" data-action="prev" ${state.step===0?'disabled':''}>← ${prevLabel}</button><div class="btn-row-right"><button class="btn btn-primary" data-action="${nextAction}">${nextLabel} <span>→</span></button></div></div>`;
+}
+function renderUploadStep(){
+  return `<div class="content-inner">
+    <div class="section-title">素材输入 <span class="pill pill-green">示例素材已就绪</span></div><div class="section-sub">支持图片、视频和文案输入；此原型使用本地模拟素材，不会上传文件到服务器。</div>
+    <div class="asset-grid">
+      <div><div class="field-label">上传图片 / 视频 <span class="optional">· PNG, JPG, MP4, MOV</span></div><div class="upload-zone" id="upload-zone" role="button" tabindex="0"><div><div class="upload-icon">⇧</div><div class="upload-title">拖拽文件至此，或点击上传</div><div class="upload-desc">支持多文件 · 建议单个文件小于 100 MB</div><button type="button" class="btn btn-sm btn-secondary" id="choose-file">选择本地文件</button><div id="file-chip-wrap">${state.fileName?`<div class="file-chip">▧ <span>${escapeHTML(state.fileName)}</span> <span style="opacity:.65">${escapeHTML(state.fileSize)}</span></div>`:""}</div></div></div>
+      <div class="mock-ad"><div class="mock-art">${state.uploadObjectUrl?`<${state.fileType==='视频'?'video':'img'} class="uploaded-preview" src="${state.uploadObjectUrl}" ${state.fileType==='视频'?'muted autoplay loop playsinline':'alt="已上传素材预览"'}></${state.fileType==='视频'?'video':'img'}>`:'<div class="art-sun"></div><div class="art-title">FANTASY QUEST</div><div class="art-subtitle">ENTER THE<br>UNKNOWN</div>'}<div class="art-flag flag-pig"><span>文化风险</span></div><div class="art-flag flag-hand"><span>手势</span></div></div><div class="mock-ad-info"><div class="mock-ad-title">${escapeHTML(APP_DATA.sample.creative)}</div><div class="mock-ad-meta"><span>${escapeHTML(state.fileName || APP_DATA.sample.fileName)}</span><span>${escapeHTML(state.fileType)} · 示例预览</span></div></div></div>
+    </div>
+    <div class="subhead-row"><strong>原始中文文案</strong><span class="pill pill-gray">${escapeHTML(APP_DATA.sample.source)}</span></div>
+    <textarea id="original-copy" placeholder="粘贴你的原始广告文案…">${escapeHTML(state.originalCopy)}</textarea><div class="help">建议包含核心卖点、CTA 与必要的限定说明。检测结果仅供工作流演示，发布前需人工确认。</div>
+    ${stepFooter("返回项目","解析素材并继续","run-upload")}
+  </div>`;
+}
+function renderMarketStep(){
+  const m=currentMarket();
+  return `<div class="content-inner"><div class="section-title">目标市场配置 <span class="pill pill-blue">可随时调整</span></div><div class="section-sub">目标市场将影响用词、文化规则库以及合规审核提示。</div>
+    <div style="margin-top:18px" class="form-grid">
+      <div class="form-item"><label class="field-label" for="market-select">国家 / 地区</label><select id="market-select">${APP_DATA.markets.map(x=>`<option value="${x.value}" ${x.value===state.selectedMarket?'selected':''}>${x.flag} ${x.value}</option>`).join("")}</select><div class="help">文化与当地广告规则参考市场</div></div>
+      <div class="form-item"><label class="field-label" for="language-select">目标语言</label><select id="language-select">${APP_DATA.markets.map(x=>`<option value="${x.language}" ${x.language===state.selectedLanguage?'selected':''}>${x.language}</option>`).join("")}</select><div class="help">支持目标语言文案生成</div></div>
+      <div class="form-item"><label class="field-label" for="platform-select">投放平台</label><select id="platform-select">${APP_DATA.platforms.map(x=>`<option ${x===state.selectedPlatform?'selected':''}>${x}</option>`).join("")}</select><div class="help">规则提示按平台配置模拟</div></div>
+    </div>
+    <div class="thin-line"></div><div class="section-title">品牌语气 <span class="subtle" style="font-size:10px;font-weight:500">选择本地化表达方式</span></div><div class="tone-select" style="margin-top:11px">${APP_DATA.tones.map((t,i)=>`<label class="tone-option ${state.tone===t?'selected':''}"><input type="radio" name="tone" value="${t}" ${state.tone===t?'checked':''}>${["◈","✦","⚡"][i]} ${t}</label>`).join("")}</div>
+    <div class="target-summary"><div class="flag-icon">${m.flag}</div><div><div class="target-head">${m.value} · ${state.selectedLanguage} · ${state.selectedPlatform}</div><div class="target-meta">市场规则集：${m.code}-Creative Policy v1.4 · 示例规则库</div></div><div class="summary-spacer"></div><span class="pill pill-green">配置预览</span></div>
+    ${stepFooter("返回上传","确认市场并检测","run-market")}</div>`;
+}
+function renderCultureStep(){
+  const done=state.cultureApplied;
+  const risks=currentCultureRisks();
+  const score=state.realResult?.cultural?.score;
+  const riskCount=risks.length;
+  const riskOne=risks[0], riskTwo=risks[1];
+  return `<div class="content-inner"><div class="section-title">文化适配扫描 <span class="pill ${riskCount?'pill-red':'pill-green'}">${state.realResult?`模型风险评分 ${Number.isFinite(Number(score))?score:"—"} / 100`:`发现 ${riskCount} 项待处理`}</span></div><div class="section-sub">${state.realResult?'以下为真实模型根据当前素材与目标市场返回的风险提示，仍需本地团队确认。':'检测结果是规则演示：具体含义可能取决于语境、受众及当地审查意见。'}</div>
+    <div class="progress-wrap ${state.completed.has(2)?'show':''}" id="culture-progress"><div class="progress-bar" id="culture-progress-bar" style="${state.completed.has(2)?'width:100%':''}"></div></div>
+    <div class="risk-layout" style="margin-top:14px"><div class="risk-preview"><div class="risk-preview-head"><strong style="font-size:11px">视觉元素扫描图</strong><span class="pill ${riskCount?'pill-red':'pill-green'}">${riskCount} 个风险提示</span></div><div class="risk-preview-body"><div class="mock-art" style="height:215px;border-radius:8px"><div class="art-sun"></div><div class="art-title">FANTASY QUEST</div><div class="art-subtitle" style="font-size:21px">ENTER THE<br>UNKNOWN</div>${riskOne?`<div class="art-flag flag-pig" style="left:58%;top:63px;width:43px;height:35px;cursor:pointer" data-risk="${escapeHTML(riskOne.id)}"><span>R-01</span></div>`:''}${riskTwo?`<div class="art-flag flag-hand" style="right:17%;bottom:28px;width:36px;height:41px;cursor:pointer" data-risk="${escapeHTML(riskTwo.id)}"><span>R-02</span></div>`:''}</div><div class="risk-note">点击红色标注框，查看风险说明与建议替代方案。${state.realResult?'标注为结果示意位置，并非像素级目标检测框。':''}</div></div></div>
+    <div><div class="section-title" style="font-size:12px;margin-bottom:10px">检测详情</div><div class="risk-list">${riskCount?risks.map(r=>`<div class="risk-item"><div class="risk-icon">!</div><div style="min-width:0"><div class="risk-item-title">${escapeHTML(r.title)} <span style="font-size:9px;color:#d64b57;font-weight:600">· ${escapeHTML(r.level)}</span></div><div class="risk-item-desc">${escapeHTML(r.description)}</div><div class="risk-action"><button class="btn btn-sm btn-danger" data-risk="${escapeHTML(r.id)}">查看替换建议 ↗</button>${state.cultureSeen.has(r.id)?'<span class="pill pill-green">已查看</span>':''}</div></div></div>`).join(""):'<div class="safe-tip">暂未返回明确文化风险提示。请注意，这不等于保证该素材在目标市场绝对安全。</div>'}</div><div class="safe-tip">✓ ${state.realResult?'模型输出仅用于辅助决策；文化含义需要结合当地语境、完整画面与母语团队判断。':'建议优先保持玩法卖点不变，替换高风险装饰元素，并在发布前由当地团队确认语境。'}</div></div></div>
+    <div class="thin-line"></div><div class="label-row"><span class="pill ${done?'pill-green':'pill-amber'}">${done?'建议已记录':'等待确认'}</span><span class="subtle" style="font-size:10px">${done?'替换建议已加入处理报告。':'应用建议只会更新处理报告状态，不会修改源文件像素。'}</span></div>
+    ${stepFooter("返回市场设置",done?"继续生成文案":"运行文化检测","run-culture")}</div>`;
+}
+function renderCopyStep(){
+  const c=localizedCopy();
+  const languageOptions=APP_DATA.markets.map(x=>`<option value="${x.language}" ${x.language===state.selectedLanguage?'selected':''}>${x.flag} ${x.language}</option>`).join("");
+  return `<div class="content-inner"><div class="section-title">本地化文案工作台 <span class="pill ${state.copiesGenerated?'pill-green':'pill-blue'}">${state.copiesGenerated?'已生成 · 可编辑':'待生成'}</span></div><div class="section-sub">将语义、语气与目标市场结合；生成结果为演示文案，投放前建议母语者校对。</div>
+    <div class="form-grid" style="grid-template-columns:1fr 1fr;margin-top:14px"><div class="form-item"><label class="field-label">目标语言</label><select id="copy-language">${languageOptions}</select></div><div class="form-item"><label class="field-label">文案语气</label><select id="copy-tone">${APP_DATA.tones.map(t=>`<option ${t===state.tone?'selected':''}>${t}</option>`).join("")}</select></div></div>
+    <div class="subhead-row"><strong>生成结果预览</strong><button class="btn btn-sm btn-secondary" id="regenerate-copy">✦ 重新生成</button></div>
+    <div class="copy-card"><div class="copy-card-head"><div class="copy-language"><span style="font-size:16px">${currentMarket().flag}</span><span>${state.selectedLanguage} · 标题与正文</span></div><span class="pill pill-blue">${state.tone}</span></div><div class="copy-body" style="background:#fff;border:1px solid #edf0f5"><div style="font-size:14px;font-weight:850;color:#1b2b4a;margin-bottom:6px" id="copy-headline">${escapeHTML(c.headline)}</div><div id="copy-body-text" style="white-space:pre-line">${escapeHTML(c.body)}</div><div style="margin-top:10px"><span style="font-size:10px;color:#8794aa">CTA</span> <span style="background:#1949c9;color:white;padding:5px 10px;border-radius:5px;font-size:10px;font-weight:800;display:inline-block;margin-left:5px" id="copy-cta">${escapeHTML(c.cta)}</span></div></div><div class="copy-foot"><span id="copy-note">策略备注：${escapeHTML(c.note)}</span><button class="text-link" id="copy-text-btn">复制文案</button></div></div>
+    <div class="safe-tip" style="margin-top:11px">本地化原则：保留产品事实与核心卖点，避免机械直译、过度承诺和缺乏当地语境的表达。</div>
+    ${stepFooter("返回文化检测",state.copiesGenerated?"继续合规审核":"生成文案并继续","run-copy")}</div>`;
+}
+function renderComplianceStep(){
+  const rows=currentComplianceRows();
+  const comp=state.realResult?.compliance;
+  const reviews=rows.filter(r=>r.status!=="pass").length;
+  const done=state.complianceRun;
+  const passed=comp ? comp.status==="通过" : reviews===0;
+  return `<div class="content-inner"><div class="section-title">合规审核报告 <span class="pill pill-gray">${state.realResult?'模型辅助检查':'规则集 v1.4'}</span></div><div class="section-sub">${state.realResult?'根据输入文案、目标市场与平台生成的初步风险判断；不替代法律意见或平台官方审核。':'展示模拟规则命中情况；此处不是法律意见或平台官方审核结果。'}</div>
+    <div class="compliance-summary" style="margin-top:14px"><div class="compliance-emblem">⚑</div><div style="flex:1"><div class="compliance-title">${passed?'未发现明确问题':`${reviews} 项需人工复核`}</div><div class="compliance-sub">${passed?'当前自动检查未返回需要复核的命中项，仍应结合落地页、受众与最新平台政策复核。':'当前判断：请先处理命中的高风险文案与目标市场提示，再进行交付。'}</div></div><span class="pill ${passed?'pill-green':'pill-amber'}">${passed?'通过':'需人工复核'}</span></div>
+    <div class="compliance-rules">${rows.map(r=>`<div class="rule-row"><div class="rule-state ${r.status==='pass'?'state-pass':'state-review'}">${r.status==='pass'?'✓':'!'}</div><div style="flex:1"><div class="rule-title">${escapeHTML(r.title)}</div><div class="rule-desc">${escapeHTML(r.detail)}</div></div><div class="rule-right"><span class="pill ${r.status==='pass'?'pill-green':'pill-amber'}">${r.status==='pass'?'通过':'需人工复核'}</span></div></div>`).join("")}</div>
+    <div style="font-size:10px;color:#8c97a9;margin-top:11px">审核覆盖：隐私与用户同意提示 / ${escapeHTML(state.selectedPlatform)} 平台规则 / ${escapeHTML(state.selectedMarket)} 市场风险。真实模式仍需结合完整落地页、定向受众和最新规则人工检查。</div>
+    <div class="progress-wrap ${done?'show':''}" id="compliance-progress"><div class="progress-bar" id="compliance-progress-bar" style="${done?'width:100%':''}"></div></div>
+    ${stepFooter("返回文案生成",done?"继续规格适配":"运行合规检查","run-compliance")}</div>`;
+}
+function renderFormatStep(){
+  return `<div class="content-inner"><div class="section-title">多规格素材生成 <span class="pill ${state.formatsRun?'pill-green':'pill-blue'}">${state.formatsRun?'已完成适配':'预览模式'}</span></div><div class="section-sub">勾选本次需要交付的尺寸；当前仅生成规格配置与缩略图占位，不会实际重绘或编码视频。</div>
+    <div class="format-grid">${APP_DATA.formats.map(f=>`<label class="format-card ${state.selectedFormats.has(f.id)?'selected':''}" data-format-card="${f.id}"><div class="format-preview"><div class="preview-poster ${f.id==='vertical'?'preview-tall':f.id==='square'?'preview-square':'preview-wide'}"><span>FANTASY<br>QUEST</span></div></div><div class="format-name"><span>${f.name}</span><input class="tiny-check format-check" type="checkbox" value="${f.id}" ${state.selectedFormats.has(f.id)?'checked':''}></div><div class="format-meta">${f.size} · ${f.ratio}</div><div class="format-time"><span>${f.platform}</span><span>${f.duration}</span></div></label>`).join("")}</div>
+    <div class="safe-tip">智能裁切建议：主体安全区保留在画面中央 80% 区域内；字幕与 CTA 避免覆盖平台按钮区。视频时长为可选交付规格建议。</div>
+    ${stepFooter("返回合规审核",state.formatsRun?"继续生成 A/B 变体":"生成所选规格","run-formats")}</div>`;
+}
+function renderVariantsStep(){
+  const variants=currentVariants();
+  return `<div class="content-inner"><div class="section-title">A/B 测试变体 <span class="pill ${state.variantsRun?'pill-green':'pill-blue'}">${variants.length} 个候选版本</span></div><div class="section-sub">每个版本聚焦不同的转化驱动因素。建议单次测试只改变核心主张，避免多个变量同时变化。</div>
+    <div class="variant-grid">${variants.map(v=>`<div class="variant-card" style="border-color:${state.selectedVariant===v.id?v.color:'#e2e8f1'};box-shadow:${state.selectedVariant===v.id?`0 0 0 2px ${v.color}19`:'none'}"><div class="variant-top"><span class="variant-id">VARIANT ${escapeHTML(v.id)}</span><span class="pill" style="background:${v.color}15;color:${v.color}">${escapeHTML(v.concept)}</span></div><div class="variant-body"><div class="variant-hook">${escapeHTML(v.hook)}</div><div class="variant-copy">${escapeHTML(v.copy)}</div><div class="variant-test">${escapeHTML(v.test)}</div><div class="variant-footer"><span>主要指标：<b style="color:#52617a">${escapeHTML(v.metric)}</b></span><button class="btn btn-sm ${state.selectedVariant===v.id?'btn-primary':' btn'}" data-select-variant="${escapeHTML(v.id)}">${state.selectedVariant===v.id?'已选中':'选择版本'}</button></div></div></div>`).join("")}</div>
+    <div class="subhead-row"><strong>建议测试设计</strong><span class="pill pill-gray">随机分流 · 同预算 · 同定向</span></div><div style="padding:11px 12px;background:#f8faff;border:1px solid #e5edff;border-radius:9px;font-size:10.5px;color:#61708a;line-height:1.7">以 Variant ${escapeHTML(variants[0]?.id||"A")} 为对照组，其他版本验证各自的本地化诉求。保持受众、预算和投放时段一致，待达到预设样本量后再比较 CTR、CVR 与 VTR，避免过早下结论。</div>
+    ${stepFooter("返回规格适配",state.variantsRun?"检查交付包":"生成测试方案","run-variants")}</div>`;
+}
+function renderExportStep(){
+  const ready=state.exported;
+  return `<div class="content-inner"><div class="section-title">交付素材包 <span class="pill ${ready?'pill-green':'pill-amber'}">${ready?'模拟打包完成':'待导出'}</span></div><div class="section-sub">导出包含文案、规则检查摘要、规格配置、A/B 测试计划与处理报告的模拟资产清单。</div>
+    <div class="export-hero" style="margin-top:14px"><div class="export-symbol">⇩</div><div style="flex:1"><div class="export-title">${ready?'AdLocalize_Package 已生成':'准备生成本地化素材包'}</div><div class="export-sub">${ready?'打包状态：成功 · 模拟文件，可下载 JSON 交付清单':'请确认交付内容后生成本地模拟素材包。'}</div></div><span class="pill ${ready?'pill-green':'pill-blue'}">${ready?'READY':'PACKAGE PREVIEW'}</span></div>
+    <div class="export-stats"><div class="export-stat"><div class="export-stat-label">已配置规格</div><div class="export-stat-value">${state.selectedFormats.size}<span style="font-size:11px;color:#98a3b5;font-weight:600"> / 3</span></div></div><div class="export-stat"><div class="export-stat-label">A/B 变体</div><div class="export-stat-value">${state.variantsRun?3:3}<span style="font-size:11px;color:#98a3b5;font-weight:600"> 个</span></div></div><div class="export-stat"><div class="export-stat-label">合规状态</div><div class="export-stat-value" style="font-size:15px;color:${state.realResult?.compliance?.status==='通过'?'#15966a':'#b77a0c'}">${state.realResult?.compliance?.status==='通过'?'通过':'需复核'}</div></div></div>
+    <div class="subhead-row"><strong>交付包目录</strong><span class="subtle" style="font-size:10px">预计包含 5 类内容</span></div><div class="package-list">
+      <div class="package-row"><div class="package-file-icon">文</div><div><div class="package-name">localized_copy_${currentMarket().code.toLowerCase()}.json</div><div class="package-meta">目标语言文案、标题与 CTA</div></div><span class="package-status pill pill-green">已就绪</span></div>
+      <div class="package-row"><div class="package-file-icon">✓</div><div><div class="package-name">compliance_review_report.json</div><div class="package-meta">规则命中情况与人工复核提示</div></div><span class="package-status pill pill-amber">需复核</span></div>
+      <div class="package-row"><div class="package-file-icon">▧</div><div><div class="package-name">creative_specs_manifest.json</div><div class="package-meta">画幅、分辨率与时长配置</div></div><span class="package-status pill pill-green">已就绪</span></div>
+      <div class="package-row"><div class="package-file-icon">A/B</div><div><div class="package-name">ab_test_plan.json</div><div class="package-meta">三个创意变体与验证指标</div></div><span class="package-status pill pill-green">已就绪</span></div>
+      <div class="package-row"><div class="package-file-icon">▤</div><div><div class="package-name">processing_summary.json</div><div class="package-meta">耗时、Token、成本估算与 Agent 日志摘要</div></div><span class="package-status pill ${ready?'pill-green':'pill-gray'}">${ready?'已生成':'待生成'}</span></div>
+    </div>
+    <div class="progress-wrap ${ready?'show':''}" id="export-progress"><div class="progress-bar" id="export-progress-bar" style="${ready?'width:100%':''}"></div></div>
+    <div class="processing-note" id="export-note">${ready?'素材包已生成（模拟）。你可以下载 JSON 清单，或导出处理报告。':''}</div>
+    <div class="btn-row"><button class="btn" data-action="prev">← 返回 A/B 测试</button><div class="btn-row-right"><button class="btn" id="download-report">下载处理报告</button><button class="btn btn-primary" id="export-package">${ready?'重新生成素材包':'生成并导出素材包'} <span>⇩</span></button></div></div>
+  </div>`;
+}
+
+function bindGlobalEvents(){
+  const modeSelect=$("execution-mode");
+  if(modeSelect)modeSelect.addEventListener("change",()=>{
+    if(state.running){modeSelect.value=state.mode;toast("Agent 正在执行，完成后再切换运行模式。 ");return;}
+    state.mode=modeSelect.value;
+    // 切换运行引擎后重置本次进度与指标，避免把模拟 Token 和真实 API Token 混在一起。
+    state.realResult=null;state.completed.clear();state.totalTokens=0;state.totalElapsed=0;
+    state.cultureApplied=false;state.cultureSeen.clear();state.copiesGenerated=false;state.complianceRun=false;
+    state.formatsRun=false;state.variantsRun=false;state.exported=false;
+    updateModeUI();renderWorkflow();renderStep();updateMetrics();
+    if(state.mode==="real"){
+      setApiStatus("等待模型请求","amber");
+      addLog({kind:"info",name:"运行模式",message:`已切换到真实 API 模式。后端地址：${CLIENT_CONFIG.API_BASE_URL}；API Key 仅保存在后端环境变量中。`,token:0,duration:"—"});
+      toast("已切换真实模式；首次分析将请求后端模型代理");
+    }else{
+      setApiStatus("模拟模式","gray");
+      addLog({kind:"info",name:"运行模式",message:"已切换到本地模拟模式，不会调用模型 API。",token:0,duration:"—"});
+      toast("已切换模拟模式");
+    }
+  });
+  $("clear-logs").addEventListener("click",()=>{ $("logs").innerHTML='<div class="log-empty" id="log-empty">日志已清空<br><span style="font-size:9px">新的 Agent 执行记录将在此显示</span></div>';state.logCount=0;updateLogSummary();toast("已清空日志面板"); });
+  $("run-current-agent").addEventListener("click",()=>runCurrentStep());
+  $("file-input").addEventListener("change",e=>handleFiles(e.target.files));
+  $("modal-x").addEventListener("click",closeModal);$("modal-cancel").addEventListener("click",closeModal);
+  $("modal-apply").addEventListener("click",()=>{const r=currentCultureRisks().find(x=>x.id===state.modalRiskId)||APP_DATA.risks.find(x=>x.id===state.modalRiskId);if(r){state.cultureApplied=true;state.cultureSeen.add(r.id);addLog({kind:"success",name:"文化适配 Agent",message:`已记录建议：${r.title} → 已加入替换建议清单。`,token:0,duration:"0.2s"});renderStep();toast("替换建议已记录到处理报告");}closeModal();});
+  $("modal-backdrop").addEventListener("click",e=>{if(e.target===$("modal-backdrop"))closeModal();});
+}
+function bindStepEvents(){
+  const uploadZone=$("upload-zone");
+  if(uploadZone){ uploadZone.addEventListener("click",e=>{if(e.target.closest("button"))return;$("file-input").click();});uploadZone.addEventListener("keydown",e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$("file-input").click();}});uploadZone.addEventListener("dragover",e=>{e.preventDefault();uploadZone.classList.add("dragover")});uploadZone.addEventListener("dragleave",()=>uploadZone.classList.remove("dragover"));uploadZone.addEventListener("drop",e=>{e.preventDefault();uploadZone.classList.remove("dragover");handleFiles(e.dataTransfer.files);});$("choose-file").addEventListener("click",e=>{e.stopPropagation();$("file-input").click();}); }
+  if($("original-copy"))$("original-copy").addEventListener("input",e=>{state.originalCopy=e.target.value;invalidateRealResult();});
+  if($("market-select"))$("market-select").addEventListener("change",e=>{const market=APP_DATA.markets.find(x=>x.value===e.target.value);state.selectedMarket=market.value;state.selectedLanguage=market.language;invalidateRealResult();renderStep();});
+  if($("language-select"))$("language-select").addEventListener("change",e=>{state.selectedLanguage=e.target.value;invalidateRealResult();});
+  if($("platform-select"))$("platform-select").addEventListener("change",e=>{state.selectedPlatform=e.target.value;invalidateRealResult();});
+  document.querySelectorAll('input[name="tone"]').forEach(el=>el.addEventListener("change",e=>{state.tone=e.target.value;invalidateRealResult();document.querySelectorAll('.tone-option').forEach(l=>l.classList.toggle('selected',l.querySelector('input').checked));}));
+  document.querySelectorAll("[data-action]").forEach(btn=>btn.addEventListener("click",()=>handleStepAction(btn.dataset.action)));
+  document.querySelectorAll("[data-risk]").forEach(btn=>btn.addEventListener("click",()=>openRiskModal(btn.dataset.risk)));
+  if($("copy-language"))$("copy-language").addEventListener("change",e=>{state.selectedLanguage=e.target.value;const mk=APP_DATA.markets.find(m=>m.language===state.selectedLanguage);if(mk)state.selectedMarket=mk.value;invalidateRealResult();renderStep();});
+  if($("copy-tone"))$("copy-tone").addEventListener("change",e=>{state.tone=e.target.value;invalidateRealResult();renderStep();});
+  if($("regenerate-copy"))$("regenerate-copy").addEventListener("click",()=>simulateAgent(3,{forceReal:true,onFinish:()=>{state.copiesGenerated=true;renderStep();toast("已重新生成目标语言文案");}}));
+  if($("copy-text-btn"))$("copy-text-btn").addEventListener("click",()=>{const c=localizedCopy();const text=`${c.headline}\n${c.body}\nCTA: ${c.cta}`;copyText(text,"文案已复制（如浏览器限制剪贴板，请手动选择）");});
+  document.querySelectorAll(".format-check").forEach(ch=>ch.addEventListener("change",e=>{if(e.target.checked)state.selectedFormats.add(e.target.value);else state.selectedFormats.delete(e.target.value);const card=e.target.closest('.format-card');card.classList.toggle('selected',e.target.checked);}));
+  document.querySelectorAll("[data-select-variant]").forEach(btn=>btn.addEventListener("click",()=>{state.selectedVariant=btn.dataset.selectVariant;renderStep();addLog({kind:"info",name:"A/B 测试 Agent",message:`已选择 Variant ${state.selectedVariant} 作为当前预览版本。`,token:0,duration:"—"});}));
+  if($("export-package"))$("export-package").addEventListener("click",()=>simulateAgent(7,{onFinish:()=>{state.exported=true;state.completed.add(7);renderWorkflow();renderStep();toast("素材包已生成（模拟）");}}));
+  if($("download-report"))$("download-report").addEventListener("click",()=>{const report=buildPackageData();downloadJSON(report,"AdLocalize_processing_report.json");addLog({kind:"success",name:"交付打包 Agent",message:"已生成处理报告 JSON 下载文件。",token:0,duration:"0.2s"});toast("处理报告已下载");});
+}
+
+async function handleFiles(fileList){
+  if(!fileList||!fileList.length)return;
+  const f=fileList[0];
+  if(!/^image\//.test(f.type) && !/^video\//.test(f.type)){toast("请选择图片或视频文件");return;}
+  state.fileName=f.name;state.fileType=f.type.startsWith("video/")?"视频":"图片";state.fileSize=humanFileSize(f.size);state.exported=false;invalidateRealResult();state.analysisImageDataUrl=null;
+  if(state.uploadObjectUrl)URL.revokeObjectURL(state.uploadObjectUrl);
+  state.uploadObjectUrl=URL.createObjectURL(f);
+  addLog({kind:"info",name:"素材输入",message:`已选择 ${f.name}（${state.fileType}，${state.fileSize}）。正在准备真实分析输入…`,token:0,duration:"—"});
+  renderStep();
+  try{
+    state.analysisImageDataUrl = f.type.startsWith("image/") ? await compressImageForAnalysis(f) : await captureVideoFrameForAnalysis(state.uploadObjectUrl);
+    addLog({kind:"success",name:"素材预处理",message:state.fileType==="视频"?"已从视频截取一帧作为视觉分析输入；不会上传完整视频。":"图片已压缩为适合视觉模型处理的 JPEG。",token:0,duration:"本地处理"});
+  }catch(err){
+    state.analysisImageDataUrl=null;
+    addLog({kind:"warn",name:"素材预处理",message:`无法生成视觉分析输入：${err.message||err}。真实模式下可重新选择 JPG/PNG/WebP 图片。`,token:0,duration:"—"});
+  }
+  renderStep();toast(`已载入文件：${f.name}`);
+}
+function imageToJpegDataUrl(img){
+  const maxEdge=CLIENT_CONFIG.MAX_IMAGE_EDGE||1600;
+  const scale=Math.min(1,maxEdge/Math.max(img.naturalWidth||img.videoWidth||img.width,img.naturalHeight||img.videoHeight||img.height));
+  const canvas=document.createElement("canvas");
+  canvas.width=Math.max(1,Math.round((img.naturalWidth||img.videoWidth||img.width)*scale));
+  canvas.height=Math.max(1,Math.round((img.naturalHeight||img.videoHeight||img.height)*scale));
+  const ctx=canvas.getContext("2d",{alpha:false});
+  ctx.drawImage(img,0,0,canvas.width,canvas.height);
+  return canvas.toDataURL("image/jpeg",CLIENT_CONFIG.IMAGE_JPEG_QUALITY||0.82);
+}
+function compressImageForAnalysis(file){
+  return new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(file),img=new Image();
+    img.onload=()=>{try{const data=imageToJpegDataUrl(img);URL.revokeObjectURL(url);resolve(data);}catch(e){URL.revokeObjectURL(url);reject(e);}};
+    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("浏览器无法读取此图片"));};
+    img.src=url;
+  });
+}
+function captureVideoFrameForAnalysis(url){
+  return new Promise((resolve,reject)=>{
+    const video=document.createElement("video");video.muted=true;video.playsInline=true;video.preload="metadata";video.src=url;
+    const cleanup=()=>{video.removeAttribute("src");video.load();};
+    video.onerror=()=>{cleanup();reject(new Error("无法读取视频帧"));};
+    video.onloadedmetadata=()=>{try{video.currentTime=Math.min(1,Math.max(0,(video.duration||1)*0.15));}catch(e){cleanup();reject(e);}};
+    video.onseeked=()=>{try{const data=imageToJpegDataUrl(video);cleanup();resolve(data);}catch(e){cleanup();reject(e);}};
+  });
+}
+function humanFileSize(bytes){if(!bytes)return"0 B";const units=["B","KB","MB","GB"];let i=0,n=bytes;while(n>=1024&&i<units.length-1){n/=1024;i++;}return`${n.toFixed(i?1:0)} ${units[i]}`;}
+function handleStepAction(action){
+  if(action==="prev"){if(state.step>0){state.step--;renderWorkflow();renderStep();}return;}
+  const map={"run-upload":0,"next":state.step,"run-market":1,"run-culture":2,"run-copy":3,"run-compliance":4,"run-formats":5,"run-variants":6};
+  if(action==="run-upload"){
+    state.originalCopy=$("original-copy")?$("original-copy").value:state.originalCopy;
+    if(!state.originalCopy.trim()){toast("请先输入原始中文文案");return;}
+    simulateAgent(0,{onFinish:()=>{state.completed.add(0);state.step=1;renderWorkflow();renderStep();toast("素材解析完成，已进入目标市场配置");}});return;
+  }
+  if(action==="run-market"){
+    if($("language-select"))state.selectedLanguage=$("language-select").value;if($("platform-select"))state.selectedPlatform=$("platform-select").value;
+    simulateAgent(1,{onFinish:()=>{state.completed.add(1);state.step=2;renderWorkflow();renderStep();toast("目标市场配置已保存");}});return;
+  }
+  if(action==="run-culture"){
+    if(!state.completed.has(2)){simulateAgent(2,{onFinish:()=>{state.completed.add(2);renderWorkflow();renderStep();toast("文化扫描完成：发现 2 项待处理提示");}});}else {state.step=3;renderWorkflow();renderStep();}return;
+  }
+  if(action==="run-copy"){
+    simulateAgent(3,{onFinish:()=>{state.copiesGenerated=true;state.completed.add(3);state.step=4;renderWorkflow();renderStep();toast("目标语言文案已生成");}});return;
+  }
+  if(action==="run-compliance"){
+    simulateAgent(4,{onFinish:()=>{state.complianceRun=true;state.completed.add(4);state.step=5;renderWorkflow();renderStep();toast("合规检查完成：部分项目需要人工复核");}});return;
+  }
+  if(action==="run-formats"){
+    if(state.selectedFormats.size===0){toast("请至少选择一种交付规格");return;}
+    simulateAgent(5,{onFinish:()=>{state.formatsRun=true;state.completed.add(5);state.step=6;renderWorkflow();renderStep();toast("所选规格配置已生成");}});return;
+  }
+  if(action==="run-variants"){
+    simulateAgent(6,{onFinish:()=>{state.variantsRun=true;state.completed.add(6);state.step=7;renderWorkflow();renderStep();toast("A/B 测试预案已生成");}});return;
+  }
+  if(action==="next"){
+    if(state.step<7){state.step++;renderWorkflow();renderStep();}return;
+  }
+}
+function runCurrentStep(){
+  if(state.running){toast("当前 Agent 正在执行，请稍候");return;}
+  const actionByStep=["run-upload","run-market","run-culture","run-copy","run-compliance","run-formats","run-variants","export"];
+  if(state.step===7){$("export-package")?.click();return;}
+  handleStepAction(actionByStep[state.step]);
+}
+
+function simulateAgent(stepIndex,opts={}){
+  if(state.running){toast("已有 Agent 正在执行，请稍后重试");return;}
+  const agent=APP_DATA.agents[stepIndex];if(!agent)return;
+  state.running=true;state.lastAgentRun=stepIndex;
+  const progressId=stepIndex===2?"culture-progress":stepIndex===4?"compliance-progress":stepIndex===7?"export-progress":"step-progress";
+  let progress=$(progressId);if(!progress)progress=$("step-progress");if(progress)progress.classList.add("show");
+  const bar=progress?progress.querySelector(".progress-bar"):null;
+  const noteId=stepIndex===7?"export-note":"processing-note";
+  const note=$(noteId);if(note)note.textContent=`${agent.name} 正在${state.mode==="real"?"请求模型分析":"分析"}…`;
+  const logId=`log-${Date.now()}`;
+  addLog({kind:"running",name:agent.name,message:state.mode==="real"?"正在连接后端分析代理，准备结构化输出…":"已启动任务，正在解析规则与生成结果…",token:0,duration:"运行中",id:logId});
+  const started=performance.now();
+  if(bar)bar.style.width="8%";
+  let pct=8;
+  const interval=setInterval(()=>{pct=Math.min(93,pct+7+Math.random()*12);if(bar)bar.style.width=`${pct}%`;},220);
+  const delay=1200+Math.floor(Math.random()*650);
+  const modelEligible=[2,3,4,6].includes(stepIndex);
+  (async()=>{
+    let tokenForRun=agent.token, durationLabel=agent.duration, logKind=stepIndex===4?"warn":"success", finishedMessage=agent.description+"；任务执行完成。";
+    try{
+      if(state.mode==="real" && modelEligible){
+        if(!state.realResult || opts.forceReal){
+          setApiStatus("模型请求中","amber",true);
+          const result=await requestRealAnalysis();
+          if(!result || !result.cultural || !result.translation || !result.compliance || !Array.isArray(result.abVariants))throw new Error("后端返回的数据结构不完整，请检查模型输出或服务端日志。");
+          state.realResult=result;
+          tokenForRun=Number(result.tokenUsage?.total||0);
+          state.totalTokens+=tokenForRun;
+          const elapsed=Math.max(1,Math.round((performance.now()-started)/1000));
+          state.totalElapsed+=elapsed;
+          durationLabel=`${elapsed}s`;
+          setApiStatus("模型分析完成","green");
+          finishedMessage=`模型返回结构化结果：${(result.cultural.risks||[]).length} 项文化风险、${(result.compliance.issues||[]).length} 项合规提示、${result.abVariants.length} 个 A/B 变体。`;
+          if(stepIndex===4 && result.compliance.status!=="通过")logKind="warn";
+        }else{
+          tokenForRun=0;durationLabel="复用结果";
+          await new Promise(resolve=>setTimeout(resolve,350));
+          state.totalElapsed+=1;
+          finishedMessage="复用本轮真实模型结果；未重复调用模型。";
+          if(stepIndex===4 && state.realResult.compliance.status!=="通过")logKind="warn";
+        }
+      }else{
+        // 非 AI 步骤继续使用原来的定时交互；真实模式下不伪报模型 Token。
+        await new Promise(resolve=>setTimeout(resolve,delay));
+        state.totalElapsed+=Math.max(1,Math.round((performance.now()-started)/1000));
+        if(state.mode==="simulation"){
+          state.totalTokens+=agent.token;
+          tokenForRun=agent.token;
+        }else{
+          tokenForRun=0;
+          durationLabel=`${Math.max(1,Math.round((performance.now()-started)/1000))}s`;
+          finishedMessage="辅助工作流步骤完成；该步骤不调用模型，因此未产生模型 Token。";
+        }
+      }
+    }catch(err){
+      if(state.mode==="real" && modelEligible){
+        const errMessage=err?.message||"未知请求错误";
+        setApiStatus("请求失败 · 已回退","amber");
+        updateLogItem(logId,{kind:"warn",message:`真实 API 失败：${errMessage}。当前步骤将改用内置模拟数据继续执行。`,token:0,duration:`${Math.max(1,Math.round((performance.now()-started)/1000))}s`});
+        state.mode="simulation";state.totalTokens=0;state.totalElapsed=0;updateModeUI();updateMetrics();
+        toast(`真实 API 不可用，已自动切换模拟模式：${errMessage}`);
+        await new Promise(resolve=>setTimeout(resolve,delay));
+        tokenForRun=agent.token;durationLabel=agent.duration;
+        state.totalTokens+=agent.token;
+        state.totalElapsed+=Math.max(1,Math.round((performance.now()-started)/1000));
+        state.realResult=null;
+        logKind=stepIndex===4?"warn":"success";
+        finishedMessage=`已使用内置模拟结果继续。原始错误：${errMessage}`;
+      }else{
+        state.running=false;clearInterval(interval);
+        updateLogItem(logId,{kind:"warn",message:err?.message||"Agent 执行失败。",token:0,duration:"失败"});
+        updateMetrics();if(opts.onError)opts.onError(err);return;
+      }
+    }
+    clearInterval(interval);if(bar)bar.style.width="100%";
+    state.completed.add(stepIndex);state.running=false;
+    if(note)note.textContent=`✓ ${agent.name} 执行完成 · ${tokenForRun.toLocaleString()} Tokens · ${durationLabel}`;
+    updateLogItem(logId,{kind:logKind,message:finishedMessage,token:tokenForRun,duration:durationLabel});
+    updateMetrics();renderWorkflow();updateModeUI();
+    if(opts.onFinish)opts.onFinish();
+  })();
+}
+
+// 真实模式只调用自建后端。浏览器不会接触 OPENAI_API_KEY 等模型密钥。
+async function requestRealAnalysis(){
+  const base=(CLIENT_CONFIG.API_BASE_URL||"").trim().replace(/\/+$/ ,"");
+  if(!base)throw new Error("未配置 CLIENT_CONFIG.API_BASE_URL。");
+  const payload={
+    text:state.originalCopy,
+    market:state.selectedMarket,
+    targetLanguage:state.selectedLanguage,
+    platform:state.selectedPlatform,
+    tone:state.tone,
+    fileName:state.fileName,
+    fileType:state.fileType,
+    imageDataUrl:state.analysisImageDataUrl||null
+  };
+  const send=async(password)=>{
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),CLIENT_CONFIG.REQUEST_TIMEOUT_MS||65000);
+    try{
+      return await fetch(`${base}/api/analyze`,{
+        method:"POST",headers:{"Content-Type":"application/json",...(password?{"X-App-Password":password}:{})},
+        body:JSON.stringify(payload),signal:controller.signal
+      });
+    }finally{clearTimeout(timeout);}
+  };
+  let password=sessionStorage.getItem("adlocalize_access_password")||"";
+  let response;
+  try{response=await send(password);}catch(e){
+    if(e.name==="AbortError")throw new Error("请求超时。请检查 Render 服务是否休眠、模型是否响应，或稍后重试。");
+    // 网络短暂失败时仅重试一次，避免无限请求。
+    await new Promise(r=>setTimeout(r,650));
+    try{response=await send(password);}catch(e2){throw new Error(`无法连接后端 ${base}。请检查 API 地址、服务状态和 CORS。`);}
+  }
+  if(response.status===401){
+    const authData=await response.json().catch(()=>({}));
+    if(authData.code==="APP_PASSWORD_REQUIRED"){
+      const entered=window.prompt("此 AdLocalize AI 实例需要访问密码：");
+      if(!entered)throw new Error("已取消访问密码输入。");
+      sessionStorage.setItem("adlocalize_access_password",entered);
+      response=await send(entered);
+    }
+  }
+  const data=await response.json().catch(()=>({error:"后端返回非 JSON 响应。"}));
+  if(!response.ok)throw new Error(data.error||`后端请求失败（HTTP ${response.status}）`);
+  if(data.tokenUsage && !Number.isFinite(Number(data.tokenUsage.total)))throw new Error("后端 tokenUsage 字段格式无效。");
+  return data;
+}
+function addLog({kind="info",name="Agent",message="",token=0,duration="—",id=null}){
+  const logs=$("logs");const empty=$("log-empty");if(empty)empty.remove();
+  const logId=id||`log-${Date.now()}-${Math.random().toString(36).slice(2,6)}`;
+  const icon=kind==="success"?"✓":kind==="running"?"↻":kind==="warn"?"!":"·";
+  const nodeClass=kind==="success"?"success":kind==="running"?"running":kind==="warn"?"warn":"";
+  const html=`<div class="log-item" id="${logId}"><div class="log-timeline"><div class="log-node ${nodeClass}">${icon}</div></div><div class="log-main"><div class="log-top"><span class="log-agent">${escapeHTML(name)}</span><span class="log-time">${new Date().toLocaleTimeString("zh-CN",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"})}</span></div><div class="log-message">${escapeHTML(message)}</div><div class="log-meta"><span>Token <b>${token?Number(token).toLocaleString():"—"}</b></span><span>耗时 <b>${escapeHTML(duration)}</b></span><span>${kind==="success"?"成功":kind==="running"?"运行中":kind==="warn"?"需复核":"信息"}</span></div></div></div>`;
+  logs.insertAdjacentHTML("afterbegin",html);state.logCount++;updateLogSummary();return logId;
+}
+function updateLogItem(id,{kind,message,token,duration}){
+  const el=$(id);if(!el)return;const node=el.querySelector(".log-node");node.className=`log-node ${kind==="success"?"success":kind==="warn"?"warn":""}`;node.textContent=kind==="success"?"✓":kind==="warn"?"!":"·";
+  el.querySelector(".log-message").textContent=message;const meta=el.querySelector(".log-meta");meta.innerHTML=`<span>Token <b>${Number(token).toLocaleString()}</b></span><span>耗时 <b>${escapeHTML(duration)}</b></span><span>${kind==="success"?"成功":kind==="warn"?"需复核":"信息"}</span>`;
+}
+function updateLogSummary(){
+  $("log-completed").textContent=state.completed.size;
+  const total=state.totalElapsed;$("log-elapsed").textContent=`${String(Math.floor(total/60)).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;
+}
+function updateMetrics(){
+  $("top-token").textContent=state.totalTokens.toLocaleString();$("metric-token").textContent=state.totalTokens.toLocaleString();
+  const elapsed=`${String(Math.floor(state.totalElapsed/60)).padStart(2,'0')}:${String(state.totalElapsed%60).padStart(2,'0')}`;
+  $("metric-elapsed").textContent=elapsed;updateLogSummary();
+  const auto=state.completed.size===8?"92.0%":state.completed.size>=4?"89.5%":state.completed.size>=1?"86.0%":"92.0%";
+  $("top-auto").textContent=auto;$("metric-auto").textContent=auto;
+}
+function openRiskModal(id){
+  const r=currentCultureRisks().find(x=>x.id===id)||currentCultureRisks()[0]||APP_DATA.risks[0];state.modalRiskId=r.id;
+  $("modal-title").innerHTML=`<span style="color:var(--red)">⚠</span> ${r.title}`;
+  $("modal-body").innerHTML=`<div class="label-row" style="margin-bottom:11px"><span class="pill pill-red">${r.level}</span><span class="pill pill-gray">规则编号 CULT-${r.id.toUpperCase()}</span></div><p>${escapeHTML(r.description)}</p><div class="suggestion-box"><div class="suggestion-label">建议替换方案</div><div class="suggestion-text">${escapeHTML(r.suggestion)}</div></div><p style="font-size:10px;color:#9aa4b5;margin:12px 0 0">本建议用于演示文化风险工作流，并非对某国家或群体的绝对判断。请结合素材语境与当地专业意见复核。</p>`;
+  $("modal-backdrop").classList.add("show");
+}
+function closeModal(){$("modal-backdrop").classList.remove("show");}
+function toast(message){
+  const host=$("toast-container");const el=document.createElement("div");el.className="toast";el.innerHTML=`<span class="toast-check">✓</span><span>${escapeHTML(message)}</span>`;host.appendChild(el);setTimeout(()=>{el.style.opacity="0";el.style.transform="translateY(-6px)";setTimeout(()=>el.remove(),220);},2800);
+}
+async function copyText(text,successMessage){
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);}else{const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();}toast(successMessage);addLog({kind:"success",name:"文案工作台",message:"已复制本地化文案文本。",token:0,duration:"0.1s"});}
+  catch(e){toast("复制失败，请手动选择文案");}
+}
+function buildPackageData(){
+  const c=localizedCopy();
+  return {
+    product:"AdLocalize AI",mode:state.mode,generatedAt:new Date().toISOString(),project:APP_DATA.sample.project,
+    source:{fileName:state.fileName,fileType:state.fileType,fileSize:state.fileSize,originalCopy:state.originalCopy},
+    target:{country:state.selectedMarket,language:state.selectedLanguage,platform:state.selectedPlatform,tone:state.tone},
+    localization:{headline:c.headline,body:c.body,cta:c.cta,note:c.note},
+    culturalReview:{status:state.cultureApplied?"suggestions_recorded":"needs_review",score:state.realResult?.cultural?.score??null,risks:currentCultureRisks().map(r=>({id:r.id,title:r.title,level:r.level,suggestion:r.suggestion,seen:state.cultureSeen.has(r.id)}))},
+    compliance:{overall:state.realResult?.compliance?.status || "需人工复核",rules:currentComplianceRows()},
+    formats:APP_DATA.formats.filter(f=>state.selectedFormats.has(f.id)),
+    abVariants:currentVariants(),selectedVariant:state.selectedVariant,
+    modelAnalysis:state.realResult,
+    metrics:{elapsedSeconds:state.totalElapsed,tokenConsumption:state.totalTokens,automationRate:"92.0%",manualBaselineMinutes:120,estimatedToolMinutes:15,estimatedCostSavingCNY:480},
+    notice:"模拟交付文件。规则与文案用于产品原型展示，不构成法律意见或真实投放审核结论。"
+  };
+}
+function downloadJSON(data,filename){const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+
+init();
+</script>
+</body>
+</html>
